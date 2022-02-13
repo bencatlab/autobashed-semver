@@ -1,0 +1,50 @@
+name: AutoBashed Semantic Version
+description: Generate your next Semantic Version based on Conventional Commit, update whatever.json and bump Tag to Git repository, via Bash !
+branding:
+  icon: repeat
+  color: green
+
+inputs:
+  bump-tag:
+    description: 'Bump Tag to Git repository'
+    required: false
+    default: 'true'
+  file-update:
+    description: 'Updates file with new semver and add change to last commit'
+    required: false
+    default: 'true'
+  file-path:
+    description: 'Path to the file to update'
+    required: false
+    default: 'package.json'
+  major:
+    description: 'Wording for MAJOR'
+    required: false
+    default: 'BREAKING'
+  minor:
+    description: 'Wording for MINOR'
+    required: false
+    default: 'feat'
+  prefix:
+    description: 'Set a prefix to your tag'
+    required: false
+    default: ''
+
+outputs:
+  next-semver:
+    description: 'Your next SemVer as string'
+    value: ${{ steps.autobashed-semver.outputs.next-semver }}
+
+runs:
+  using: 'composite'
+  steps:
+    - id: autobashed-semver
+      run: ${{ github.action_path }}/autobashed-semver.sh
+      shell: bash
+      env:
+        INPUT_BUMP_TAG: '${{ inputs.bump-tag }}'
+        INPUT_FILE_UPDATE: '${{ inputs.file-update }}'
+        INPUT_FILE_PATH: '${{ inputs.file-path }}'
+        INPUT_MAJOR: '${{ inputs.major }}'
+        INPUT_MINOR: '${{ inputs.minor }}'
+        INPUT_PREFIX: '${{ inputs.prefix }}'

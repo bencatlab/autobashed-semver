@@ -1,0 +1,21 @@
+name: AutoBashed SemVer Tag
+
+on:
+  workflow_dispatch:
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: "Generate Next SemVer"
+        id: version
+        uses: ./
+        with:
+          file-path: 'version.json'
+          major: 'release'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
