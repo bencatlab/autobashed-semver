@@ -1,18 +1,19 @@
 name: AutoBashed SemVer Tag
-
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
   generate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
       - name: "Generate Next SemVer"
-        id: version
         uses: ./
         with:
           file-path: 'version.json'
