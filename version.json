@@ -1,5 +1,5 @@
 {
   "name": "autobashed-semver-demo",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Generate your next Semantic Version based on Conventional Commit, update whatever.json and bump Tag to Git repository, via Bash !"
 }

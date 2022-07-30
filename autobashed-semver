@@ -1,0 +1,87 @@
+#!/usr/bin/env bash
+# shellcheck disable=SC1091
+
+set -uo pipefail
+
+CURRENT_DIR="${BASH_SOURCE%/*}"
+. "$CURRENT_DIR/src/git.sh"
+. "$CURRENT_DIR/src/semver.sh"
+
+main() {
+
+    printf "🔰 01 - Github Config using \$GITHUB_TOKEN and \$GITHUB_ACTOR\n"
+        local gh_user_info_array
+        mapfile -t gh_user_info_array < <(github_user_config)
+
+        if [[ "${gh_user_info_array[1]}" == *"users.noreply.github.com" ]]; then
+            printf "\t🔔 No public email address detected, use 'users.noreply' Github address instead.\n"
+        fi
+        printf "\t✅ Name:  %s\n\t✅ Email: %s\n\n" "${gh_user_info_array[0]}" "${gh_user_info_array[1]}"
+
+    printf "🔰 02 - Reading latest tag from Git repository\n"
+        local latest_tag
+        latest_tag=$(latest_tag_from_git_repository)
+
+        local semver_regex
+        semver_regex="^[a-z]?[0-9]+(\.[0-9]+)+(\.[0-9]+)?(\-[a-zA-Z-]+)?(\.[0-9]+)$"
+
+        if [[ "${latest_tag}" = "0.0.0" ]]; then
+            printf "\t🔔 No tag found, creating new one: "
+        elif ! [[ "${latest_tag}" =~ $semver_regex ]]; then
+            printf "\t🔔 Latest tag '%s' is not a valid semver\n" "${latest_tag}"
+            printf "\t🔔 Creating new one: "
+            latest_tag="0.0.0"
+        else
+            printf "\t#️⃣ Latest tag: "
+        fi
+
+        printf "%s\n\n" "${latest_tag}"
+
+    printf "🔰 03 - Reading latest commit message from Git repository\n"
+        local commit_message
+        commit_message=$(latest_git_commit_message)
+
+        printf "\t🔀 %s\n\n" "${commit_message}"
+
+    printf "🔰 04 - Determine SemVer kind from latest commit message\n"
+        local semver_kind
+        semver_kind=$(semver_kind_from_commit_message "${commit_message}")
+
+        printf "\t🔑 Semantic Version kind: %s\n\n" "${semver_kind^^}"
+
+    printf "🔰 05 - Generate next SemVer based on determined kind\n"
+        local next_semver
+        next_semver=$(semver_gateway "${semver_kind}" "${latest_tag}")
+
+        if [[ ${INPUT_ENABLE_SNAPSHOT} = true ]]; then
+            printf "\t🔔 Detected as a SNAPSHOT\n"
+        fi
+
+        printf "\t📦 Next SemVer: %s\n\n" "${next_semver}"
+
+    if [ "${INPUT_FILE_UPDATE}" = true ]; then
+        printf "🔰 06 - Update version in %s\n" "${INPUT_FILE_PATH}"
+            bump_version_into_json_file "${next_semver}"
+            printf "\t✅ Updated!\n\n"
+
+        printf "🔰 07 - Update current commit by adding updated file\n"
+            update_current_commit "${INPUT_FILE_PATH}"
+            printf "\t✅ Updated!\n\n"
+    else
+        printf "🔰 06 - Update version\n\t🔔 Skipped\n\n"
+        printf "🔰 07 - Update commit with updated file\n\t🔔 Skipped\n\n"
+    fi
+
+    if [ "${INPUT_BUMP_TAG}" = true ]; then
+        printf "🔰 08 - Bump SemVer tag to Git repository\n"
+            bump_tag_into_git_repository "${INPUT_PREFIX}${next_semver}" "${commit_message}"
+            printf "\t✅ Bumped!\n\n"
+    else
+        printf "🔰 08 - Bump SemVer tag to Git repository\n\t🔔 Skipped\n\n"
+    fi
+
+    echo "::set-output name=semver::${INPUT_PREFIX}${next_semver}"
+    echo "📣 Done ! 🎉"
+}
+
+main "$@"
