@@ -1,5 +1,5 @@
-name: AutoBashed Semantic Version
-description: Generate your next Semantic Version based on Conventional Commit, update whatever.json and bump Tag to Git repository, via Bash !
+name: AutoBashed Semantic Versioning (SemVer) for RELEASE and SNAPSHOT
+description: Generate Semantic Version based on Conventional Commit, update whatever.json and bump Tag, via Bash
 branding:
   icon: repeat
   color: green
@@ -14,7 +14,7 @@ inputs:
     required: false
     default: 'true'
   file-path:
-    description: 'Path to the file to update'
+    description: 'File path to update (JSON ONLY)'
     required: false
     default: 'package.json'
   major:
@@ -29,17 +29,25 @@ inputs:
     description: 'Set a prefix to your tag'
     required: false
     default: ''
+  enable-snapshot:
+    description: 'Generate SNAPSHOT instead of RELEASE'
+    required: false
+    default: 'false'
+  snapshot-suffix:
+    description: 'Suffix for SNAPSHOT version (e.g: 1.0.1-SNAPSHOT)'
+    required: false
+    default: 'SNAPSHOT'
 
 outputs:
-  next-semver:
-    description: 'Your next SemVer as string'
-    value: ${{ steps.autobashed-semver.outputs.next-semver }}
+  semver:
+    description: 'Next generated SemVer as string'
+    value: ${{ steps.autobashed-semver.outputs.semver }}
 
 runs:
   using: 'composite'
   steps:
     - id: autobashed-semver
-      run: ${{ github.action_path }}/autobashed-semver.sh
+      run: ${{ github.action_path }}/autobashed-semver
       shell: bash
       env:
         INPUT_BUMP_TAG: '${{ inputs.bump-tag }}'
@@ -48,3 +56,5 @@ runs:
         INPUT_MAJOR: '${{ inputs.major }}'
         INPUT_MINOR: '${{ inputs.minor }}'
         INPUT_PREFIX: '${{ inputs.prefix }}'
+        INPUT_ENABLE_SNAPSHOT: '${{ inputs.enable-snapshot }}'
+        INPUT_SNAPSHOT_SUFFIX: '${{ inputs.snapshot-suffix }}'
