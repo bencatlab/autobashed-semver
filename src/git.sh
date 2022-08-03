@@ -103,4 +103,3 @@ update_current_commit() {
 	git commit --amend --no-edit > /dev/null 2>&1
 	git push origin -f > /dev/null 2>&1
 }
-

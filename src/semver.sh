@@ -19,7 +19,7 @@ semver_gateway() {
     local current_version="$2"
 
     if [[ ! ${current_version} = *${INPUT_SNAPSHOT_SUFFIX}* && ${INPUT_ENABLE_SNAPSHOT} = true ]]; then
-        create_snapshot "${current_version}"
+        create_snapshot "${semver_kind}" "${current_version}"
     elif [[ ${current_version} = *${INPUT_SNAPSHOT_SUFFIX}* && ${INPUT_ENABLE_SNAPSHOT} = true && ${semver_kind} = patch ]]; then
         increment_snapshot "${current_version}"
     elif [[ ${current_version} = *${INPUT_SNAPSHOT_SUFFIX}* && ${INPUT_ENABLE_SNAPSHOT} = false ]]; then
@@ -38,11 +38,17 @@ semver_gateway() {
 #   SNAPSHOT SemVer stating at .1
 # ---------------------------------------------
 create_snapshot() {
+    local semver_kind
+    semver_kind="$1"
+
     local current_version
-    current_version="$1"
+    current_version="$2"
+
+    local incremented_semver
+    incremented_semver=$(increment_semver "${semver_kind}" "${current_version}")
 
     local snapshot
-    snapshot="${current_version}-${INPUT_SNAPSHOT_SUFFIX}.1"
+    snapshot="${incremented_semver}-${INPUT_SNAPSHOT_SUFFIX}.1"
 
     echo "$snapshot"
 }
