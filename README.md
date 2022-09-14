@@ -1,29 +1,29 @@
 # YET ANOTHER SEMVER ACTION ?
 
-> Generate your next Semantic Version based on Conventional Commit, update whatever.json and bump Tag to Git repository, via Bash, for low dependency and saving precious seconds !
+> Generate your next Semantic Version based on Conventional Commit, update whatever.json and bump Tag to Git repository via Bash, for low dependency and save precious seconds!
 
-🚸&ensp;**This action update the last commit to avoid creating another one**
+🚸&ensp;**This action updates the last commit to avoid creating another one**
 
-🔰&ensp;**SUPPORT ONLY .JSON FILE** (for now)
+🔰&ensp;**SUPPORTS ONLY .JSON FILE** (for now)
 
 ✅&ensp;**OS COMPATIBILITY**
   - Linux
   - ~~MacOS~~ (SOON)
 
-✅&ensp;**LANGAGE and PROGRAM USED**
-  - This script work with **Bash 4+**
+✅&ensp;**LANGAGE and PROGRAMS USED**
+  - This script works with **Bash 4+**
   - Use **JQ** to manipulate **JSON** file
 
 ---
 
-## 📓&ensp;HOW TO USE IT
+## 📓&ensp;USAGE
 ### 🔸 GENERAL PURPOSE
-This action generate version based on the last git tag and the prefix of the last commit message, and only the last.  
-It take consideration of *'SemVer'* and *'Conventional Commit'*.
+This action generates the version based on the last git tag and the prefix of the last commit message, and only the last.  
+It takes consideration of *'SemVer'* and *'Conventional Commit'*.
 
-If no git tag exist, the version begin at '0.0.0' to start the process, so, if your last commit contains, for example, '*feat: my best feature ever !*', then the generated version will be '0.1.0'.
+If no git tag exists, the version begins at '0.0.0' to start the process. If your last commit contains, for example, '*feat: my best feature ever !*', then the generated version will be '0.1.0'.
 
-**This action give you multiple functions to deal with your version control:**
+**This action gives you multiple functions to deal with your version control:**
 - [x] Generate **RELEASE** version (1.0.0)
 - [x] Generate **SNAPSHOT** version (1.0.1-SNAPSHOT)
 - [x] Add **PREFIX** to **RELEASE** and **SNAPSHOT** (v1.0.1)
@@ -34,14 +34,14 @@ If no git tag exist, the version begin at '0.0.0' to start the process, so, if y
 [⤵️ See EXAMPLES below](#%E2%84%B9%EF%B8%8F-examples)
 
 ### 🔸 SNAPSHOT for GitFlow
-When 'enable-snapshot' is 'true', this action calculate the next version, and add '-SNAPSHOT.1' suffix, so, if your last commit contains, for example, '*fix: the best until that tiny bug*', then the generated version will be '0.1.1-SNAPSHOT.1'.  
+When 'enable-snapshot' is 'true', this action calculate the next version, and adds a '-SNAPSHOT.1' suffix. If your last commit contains, for example, '*fix: the best until that tiny bug*', then the generated version will be '0.1.1-SNAPSHOT.1'.  
 
-If the next one is a 'patch' too, then the version will be '0.1.1-SNAPSHOT.2', etc... until semver kind's changed for something else than the previous commit's semver kind, 'patch' here.
+If the next one is a 'patch' too, then the version will be '0.1.1-SNAPSHOT.2', etc... until semver kind's changed to something else than the previous commit's semver kind, 'patch' here.
 
-So, if the next commit contains a 'feat' prefix, then the next snapshot will be '0.2.0-SNAPSHOT.1', same for 'BREAKING', etc...
+If the next commit contains a 'feat' prefix, then the next snapshot will be '0.2.0-SNAPSHOT.1', same for 'BREAKING', etc...
 
 The goal is to work for GitFlow based development, with two principal branches, e.g. 'main' and 'develop'.  
-On the 'develop' branch, we generate SNAPSHOT to try if everything's ok, and when it is, we merge on 'main' to remove the suffix and release the final release version '0.1.1'.
+On the 'develop' branch, we generate SNAPSHOT to test if everything's ok, and when it is, we merge to 'main' to remove the suffix and release the final release version '0.1.1'.
 
 [⤵️ See SNAPSHOT EXAMPLE below](#%E2%84%B9%EF%B8%8F-examples)
 
@@ -151,8 +151,8 @@ jobs:
 
 ## 🔜&ensp;IN PROGRESS
 
-A few things that I currently work on to complet v2
-  - [ ] Update any kind of files
+A few things that I currently work on to complete v2
+  - [ ] Update any kind of file
   - [ ] Option to define default version
   - [ ] Option to handle patch keyword in addition to major and minor
   - [x] :tada: ~~Option to define SNAPSHOT suffix keyword~~
