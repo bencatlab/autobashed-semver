@@ -9,7 +9,7 @@ on:
 
 jobs:
   generate:
-    runs-on: ubuntu-latest
+    runs-on: arc-local
     steps:
       - uses: actions/checkout@v3
         with:
